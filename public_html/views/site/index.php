@@ -1,4 +1,4 @@
 <?php
 
-echo "site view!";
+//echo "site view!";
 echo $content;
