@@ -15,6 +15,7 @@ class DB
         $db_confing = require_once("../config/db.php");
         try {
             $this->connection = new PDO($db_confing['pdo'], $db_confing['db_user'], $db_confing['db_pass']);
+            $this->connection->query("SET NAMES utf8 COLLATE utf8_unicode_ci");
         }
         catch (PDOException $e) {
             die("Ошибка БД: " . $e->getMessage());
