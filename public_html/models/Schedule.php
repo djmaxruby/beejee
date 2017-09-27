@@ -15,7 +15,8 @@ class Schedule extends Model
             return null;
         $model = new self();
         $pdo = DB::getConnection();
-        $request = $pdo->connection->query("SELECT * FROM ".self::$table_name." WHERE id=$id LIMIT 1");
+        $request = $pdo->connection->prepare("SELECT * FROM ".self::$table_name." WHERE id=$id LIMIT 1");
+        $pdo->connection->execute();
         $row = $request->fetch(PDO::FETCH_ASSOC);
         foreach ($row as $key => $value) {
             $model->$key = $value;
@@ -26,15 +27,12 @@ class Schedule extends Model
     public static function all() {
         $models = [];
         $pdo = DB::getConnection();
-        $request = $pdo->connection->query("SELECT * FROM ".self::$table_name);
+        $request = $pdo->connection->prepare("SELECT * FROM ".self::$table_name);
+        $request->execute();
+        $result = $request->fetchAll(PDO::FETCH_CLASS,__CLASS__);
         $n_model = 0;
-        foreach ($request->fetch(PDO::FETCH_ASSOC) as $rows) {
-            var_dump($rows);
-//            $models[$n_model] = new self();
-//            foreach ($row as $key => $value) {
-//                $models[$n_model]->$key = $value;
-//            }
-//            $n_model++;
+        foreach ($result as $model) {
+            $models[$n_model++] = $model;
         }
         return $models;
     }
